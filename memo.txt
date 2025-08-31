@@ -5,3 +5,5 @@ vibe 코딩으로는 성장은 없음.
 
 자바스크립트를 사용해 Web Crypto API 써서 AES-GCM사용.
 보조/대안: CryptoJS (간단한 프로토타입용), WebAssembly (고성능 구현용)
+
+12월 19일이 최종 일

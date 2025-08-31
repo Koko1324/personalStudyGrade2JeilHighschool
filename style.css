@@ -1,24 +1,21 @@
-#app{
-    text-align: center;
+#title{
+  text-align: center;
 }
-#fileinput{
-  display: flex;
-  justify-content: center;
-}
-#howtouse{
-  display: flex;
-  justify-content: center;
-}
+
+#fileinput,
+#howtouse,
 p{
   display: flex;
   justify-content: center;
 }
+
 #fileupload{
   background-color: #000000;
   color: #ffffff;
   width: 100px;
   height: 30px;
 }
+
 #discription{
     border: solid;
 }
