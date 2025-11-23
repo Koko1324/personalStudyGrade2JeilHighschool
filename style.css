@@ -2,14 +2,21 @@
   text-align: center;
 }
 
+#key,
+#normalButton,
 #fileinput,
 #howtouse,
 p{
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
-#fileupload{
+#decrypt,
+#encrypt,
+#startProgram,
+#fileuploadE,
+#fileuploadD{
   background-color: #000000;
   color: #ffffff;
   width: 100px;
@@ -17,5 +24,33 @@ p{
 }
 
 #discription{
-    border: solid;
+  border: solid;
+}
+
+input[type=text] {
+  border-color:#000000;
+}
+
+input[type=submit]{
+  background-color:#000000;
+  color:#ffffff;
+  width: 40px;
+  height: 25px;
+}
+
+#normalButton{
+  padding: 20em;
+}
+
+/* 숨기기 */
+#fileuploadE {
+  display: none;
+}
+
+/* 커스텀 버튼 스타일 */
+.custom-file-upload {
+  background-color: #000000;
+  color: #ffffff;
+  padding: 8px 20px;
+  text-align: center;
 }
