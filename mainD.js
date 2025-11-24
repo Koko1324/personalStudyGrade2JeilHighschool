@@ -2,7 +2,7 @@
 let cryptoKey = null;
 
 //랜덤 문자열 web crypto api의 키로 전환 << indexD에서 문자열 제출 했을 때 작동시키기. 
-async function importKeyFromBase64(b64) { //async를 씀으로써 계속 적용됨?
+async function importKeyFromBase64(b64) { //async를 씀으로써 계속 적용됨(비동기 코드임).
     const raw = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
     return await crypto.subtle.importKey(
         "raw",
@@ -20,7 +20,7 @@ document.getElementById("key").addEventListener("submit", async (e) => {
     
     //함수 처리과정에서 오류가 없도록 try와 catch사용
     try {
-        cryptoKey = await importKeyFromBase64(b64); //await로 async를 사용? 하여 b64를 실제 사용 가능한 key로 바꿈.
+        cryptoKey = await importKeyFromBase64(b64); //await로 async가 실행될때 까지 대기하여 b64를 실제 사용 가능한 key로 바꿈.
         console.log("CryptoKey 생성 성공:", cryptoKey);
         alert("키가 성공적으로 로드되었습니다.");
     } catch (err) {
@@ -31,14 +31,14 @@ document.getElementById("key").addEventListener("submit", async (e) => {
 
 // 파일 복호화 함수
 async function decryptFile(encryptedBuffer, key) {
-    // AES-GCM은 12바이트 IV 사용 중
+    // AES-GCM은 12바이트 IV(논스) 사용 중 이므로 복호화를 위해 같은 논스 값으로 결정한다.
     const ivLength = 12;
 
     // 전체 데이터에서 IV와 암호문 분리
     const iv = encryptedBuffer.slice(0, ivLength);
     const ciphertext = encryptedBuffer.slice(ivLength);
 
-    // 복호화 실행
+    // 복호화 실행, 인증 테그도 확인하여 무결성 검증이 가능하다.
     const decryptedBuffer = await crypto.subtle.decrypt(
         {
             name: "AES-GCM",
@@ -52,9 +52,10 @@ async function decryptFile(encryptedBuffer, key) {
 }
 
 function downloadDecryptedFile(data, filename) {
-    const blob = new Blob([data]);
-    const url = URL.createObjectURL(blob);
+    const blob = new Blob([data]);//복호화된 데이터를 blob로 래핑(효율적인 파일 처리 위함).
+    const url = URL.createObjectURL(blob);//blob를 웹에서 다운로드 가능한 링크로 바꾸기.
 
+    //자동 파일 다운로드 수행.
     const a = document.createElement('a');
     a.href = url;
     a.download = filename; // 원본 이름을 그대로 사용하도록 지정
@@ -65,22 +66,24 @@ function downloadDecryptedFile(data, filename) {
     a.remove();
 }
 
-document.getElementById('fileuploadD').addEventListener('change', async (event) => {
+document.getElementById('fileuploadD').addEventListener('change', async (event) => {//복호화될 파일을 선택할 시 {}의 코드가 실행됨.
+    //키 입력 했는지 확인.
     if (!cryptoKey) {
         alert("먼저 키를 입력하세요.");
         return;
     }
 
+    //선택된 단일 파일만 처리.
     const file = event.target.files[0];
     if (!file) return;
 
     console.log("복호화할 파일:", file.name);
 
-    const encryptedData = await file.arrayBuffer();
-    const decrypted = await decryptFile(new Uint8Array(encryptedData), cryptoKey);
+    const encryptedData = await file.arrayBuffer();//암호화된 파일 메모리로 읽어오기.
+    const decrypted = await decryptFile(new Uint8Array(encryptedData), cryptoKey);//복호화 수행하기.
 
     // ".enc" 제거하기 (옵션)
-    const originalName = file.name.replace(/\.enc$/, "");
+    const originalName = file.name.replace(/\.enc$/, ""); //파일을 복호화하고 .enc확장자를 빼고 다운로드.
 
-    downloadDecryptedFile(decrypted, originalName);
+    downloadDecryptedFile(decrypted, originalName);//복호화된 파일 다운로드.
 });
