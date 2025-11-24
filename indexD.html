@@ -22,19 +22,22 @@
 
         <br>
 
-        <form>
-            <div id="fileinput">
-                <button id="fileuploadD" type="submit">파일 업로드</button>
-            </div>
+        <form id="fileinput">
+            <label for="fileuploadD" class="custom-file-upload">
+                파일 업로드
+            </label>
+            <input type="file" id="fileuploadD" accept=".txt,.pdf,.jpg,.png,.enc" />
         </form>
 
         <br>
 
-        <form>
-            <div id="key">
-                <input type="text" placeholder="key입력" required>
+        <form id="key">
+            <div>
+                <input id = keyInput type="text" placeholder="key입력" required>
                 <input type="submit">
             </div>
         </form>
+        
+        <script src="forIndexD/mainD.js"></script>
     </body>
 </html>

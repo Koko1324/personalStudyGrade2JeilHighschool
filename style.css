@@ -43,7 +43,8 @@ input[type=submit]{
 }
 
 /* 숨기기 */
-#fileuploadE {
+#fileuploadE,
+#fileuploadD {
   display: none;
 }
 
