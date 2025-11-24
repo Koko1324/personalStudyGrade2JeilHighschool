@@ -1,7 +1,7 @@
 // 전역 키 저장 변수
 let cryptoKey = null;
 
-//16 바이트 랜덤 문자열 생성 << indexE
+//16 바이트 랜덤 문자열 생성 << indexD
 function generateKeyBase64() {
     const raw = crypto.getRandomValues(new Uint8Array(16)); // AES-128
     const b64 = btoa(String.fromCharCode(...raw));
@@ -11,7 +11,7 @@ function generateKeyBase64() {
 //랜덤 문자열 확인 << indexE
 console.log(generateKeyBase64());
 
-//랜덤 문자열 web crypto api의 키로 전환 << indexE에서 문자열 제출 했을 때 작동시키기. 
+//랜덤 문자열 web crypto api의 키로 전환 << indexD에서 문자열 제출 했을 때 작동시키기. 
 async function importKeyFromBase64(b64) { //async를 씀으로써 계속 적용됨(비동기 코드임).
     const raw = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
     return await crypto.subtle.importKey(
