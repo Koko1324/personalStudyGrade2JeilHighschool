@@ -12,7 +12,7 @@ function generateKeyBase64() {
 console.log(generateKeyBase64());
 
 //랜덤 문자열 web crypto api의 키로 전환 << indexE에서 문자열 제출 했을 때 작동시키기. 
-async function importKeyFromBase64(b64) { //async를 씀으로써 계속 적용됨?
+async function importKeyFromBase64(b64) { //async를 씀으로써 계속 적용됨(비동기 코드임).
     const raw = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
     return await crypto.subtle.importKey(
         "raw",
@@ -30,7 +30,7 @@ document.getElementById("key").addEventListener("submit", async (e) => {
     
     //함수 처리과정에서 오류가 없도록 try와 catch사용
     try {
-        cryptoKey = await importKeyFromBase64(b64); //await로 async를 사용? 하여 b64를 실제 사용 가능한 key로 바꿈.
+        cryptoKey = await importKeyFromBase64(b64); //await로 async가 실행될때 까지 대기하여 b64를 실제 사용 가능한 key로 바꿈.
         console.log("CryptoKey 생성 성공:", cryptoKey);
         alert("키가 성공적으로 로드되었습니다.");
     } catch (err) {
@@ -41,9 +41,9 @@ document.getElementById("key").addEventListener("submit", async (e) => {
 
 // 파일 암호화 함수
 async function encryptFile(fileBuffer, key) {
-    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const iv = crypto.getRandomValues(new Uint8Array(12)); //난수 생성기로 12바이트 논스 생성하기.
 
-    const encryptedBuffer = await crypto.subtle.encrypt(
+    const encryptedBuffer = await crypto.subtle.encrypt( //encrypt()로 파일 데이터 암호화.
         {
             name: "AES-GCM",
             iv: iv
@@ -52,18 +52,20 @@ async function encryptFile(fileBuffer, key) {
         fileBuffer
     );
 
+    //논스와 암호문+인증태그를 같이 저장한다.(복호화를 하기 위해).
     const combined = new Uint8Array(iv.byteLength + encryptedBuffer.byteLength);
     combined.set(iv, 0);
     combined.set(new Uint8Array(encryptedBuffer), iv.byteLength);
 
-    return combined;
+    return combined; //최종 암호화된 데이터 반환.
 }
 
 // 다운로드 함수
 function downloadEncryptedFile(data, filename) {
-    const blob = new Blob([data]);
-    const url = URL.createObjectURL(blob);
+    const blob = new Blob([data]);//암호화된 데이터를 blob로 래핑(효율적인 파일 처리 위함).
+    const url = URL.createObjectURL(blob);//blob를 웹에서 다운로드 가능한 링크로 바꾸기.
 
+    //자동 파일 다운로드 수행.
     const a = document.createElement('a');
     a.href = url;
     a.download = filename;
@@ -75,19 +77,22 @@ function downloadEncryptedFile(data, filename) {
 }
 
 // 파일 선택 처리
-document.getElementById('fileuploadE').addEventListener('change', async (event) => {
+document.getElementById('fileuploadE').addEventListener('change', async (event) => { //시용자가 암호화될 파일을 선택 할 시 {}안의 코드를 실행함.
+    
+    //키 있는지 확인.
     if (!cryptoKey) { 
         alert("먼저 키를 입력하세요.");
         return;
     }
 
+    //선택된 단일 파일만 처리.
     const file = event.target.files[0];
     if (!file) return;
 
     console.log("선택한 파일:", file.name);
 
-    const fileData = await file.arrayBuffer();
+    const fileData = await file.arrayBuffer();//전체 파일 메모리에 로드.(파일을 바이너리 배열로 읽음).
     const encrypted = await encryptFile(fileData, cryptoKey);
 
-    downloadEncryptedFile(encrypted, file.name + ".enc");
+    downloadEncryptedFile(encrypted, file.name + ".enc"); //파일을 암호화하고 .enc확장자로 다운로드.
 });
