@@ -9,8 +9,9 @@ function generateKeyBase64() {
 }
 
 //랜덤 문자열 확인 << indexE
-console.log(generateKeyBase64());
-
+let randomValue = generateKeyBase64();       // 1회만 생성
+console.log(randomValue);                    // 같은 값 출력
+document.getElementById("string").innerHTML = randomValue; //id가 string인 테그에 출력
 //랜덤 문자열 web crypto api의 키로 전환 << indexD에서 문자열 제출 했을 때 작동시키기. 
 async function importKeyFromBase64(b64) { //async를 씀으로써 계속 적용됨(비동기 코드임).
     const raw = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
@@ -95,5 +96,4 @@ document.getElementById('fileuploadE').addEventListener('change', async (event) 
     const encrypted = await encryptFile(fileData, cryptoKey);
 
     downloadEncryptedFile(encrypted, file.name + ".enc"); //파일을 암호화하고 .enc확장자로 다운로드.
-
 });
