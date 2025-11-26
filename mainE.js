@@ -1,7 +1,7 @@
 // 전역 키 저장 변수
 let cryptoKey = null;
 
-//16 바이트 랜덤 문자열 생성 << indexD
+//16 바이트 랜덤 문자열 생성 << indexE
 function generateKeyBase64() {
     const raw = crypto.getRandomValues(new Uint8Array(16)); // AES-128
     const b64 = btoa(String.fromCharCode(...raw));
@@ -95,4 +95,5 @@ document.getElementById('fileuploadE').addEventListener('change', async (event) 
     const encrypted = await encryptFile(fileData, cryptoKey);
 
     downloadEncryptedFile(encrypted, file.name + ".enc"); //파일을 암호화하고 .enc확장자로 다운로드.
+
 });
