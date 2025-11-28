@@ -11,7 +11,37 @@ function generateKeyBase64() {
 //랜덤 문자열 확인 << indexE
 let randomValue = generateKeyBase64();       // 1회만 생성
 console.log(randomValue);                    // 같은 값 출력
-document.getElementById("string").innerHTML = randomValue; //id가 string인 테그에 출력
+//document.getElementById("string").innerHTML = randomValue; //id가 string인 테그에 출력
+
+// 다운로드 함수
+function downloadString(data, filename) {
+    const blob = new Blob([data]);//생성된 문자열을 blob로 래핑(효율적인 파일 처리 위함).
+    const url = URL.createObjectURL(blob);//blob를 웹에서 다운로드 가능한 링크로 바꾸기.
+
+    //자동 파일 다운로드 수행.
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+
+    URL.revokeObjectURL(url);
+    a.remove();
+}
+document.querySelector('#likeKey input[type="button"]').addEventListener("click", async (e) => {
+    e.preventDefault(); // form 기본 동작 막기
+
+    //함수 처리과정에서 오류가 없도록 try와 catch사용
+    try {
+        downloadEncryptedFile(randomValue, "Key.txt"); //파일을 암호화하고 .txt확장자로 다운로드.
+        alert("문자열(키)가 성공적으로 다운로드되었습니다.");
+    } catch (err) {
+        console.error(err);
+        alert("다운로드 실패하였습니다.");
+    }
+});
+
+
 //랜덤 문자열 web crypto api의 키로 전환 << indexD에서 문자열 제출 했을 때 작동시키기. 
 async function importKeyFromBase64(b64) { //async를 씀으로써 계속 적용됨(비동기 코드임).
     const raw = Uint8Array.from(atob(b64), c => c.charCodeAt(0));

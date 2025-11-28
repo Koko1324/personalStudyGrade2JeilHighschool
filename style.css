@@ -3,10 +3,16 @@
 }
 
 #key,
+#likeKey,
 #normalButton,
 #fileinput,
 #howtouse,
 p{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#emailValueInput{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,6 +41,13 @@ input[type=submit]{
   background-color:#000000;
   color:#ffffff;
   width: 40px;
+  height: 25px;
+}
+
+input[type=button]{
+  background-color:#000000;
+  color:#ffffff;
+  width: 100px;
   height: 25px;
 }
 
