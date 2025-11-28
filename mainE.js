@@ -64,6 +64,7 @@ document.getElementById("key").addEventListener("submit", async (e) => {
         cryptoKey = await importKeyFromBase64(b64); //await로 async가 실행될때 까지 대기하여 b64를 실제 사용 가능한 key로 바꿈.
         console.log("CryptoKey 생성 성공:", cryptoKey);
         alert("키가 성공적으로 로드되었습니다.");
+        document.getElementById("keyInput").value = "";//수정(메모리에서 보안적인 보완을 위해 키 만들때 쓴 문자열 제거)
     } catch (err) {
         console.error(err);
         alert("키 형식이 올바르지 않습니다.");
@@ -87,6 +88,8 @@ async function encryptFile(fileBuffer, key) {
     const combined = new Uint8Array(iv.byteLength + encryptedBuffer.byteLength);
     combined.set(iv, 0);
     combined.set(new Uint8Array(encryptedBuffer), iv.byteLength);
+
+    new Uint8Array(fileBuffer).fill(0);//보안적인 보완을 위해 메모리에 남은 평문 제거.
 
     return combined; //최종 암호화된 데이터 반환.
 }
@@ -126,5 +129,4 @@ document.getElementById('fileuploadE').addEventListener('change', async (event) 
     const encrypted = await encryptFile(fileData, cryptoKey);
 
     downloadEncryptedFile(encrypted, file.name + ".enc"); //파일을 암호화하고 .enc확장자로 다운로드.
-
 });
