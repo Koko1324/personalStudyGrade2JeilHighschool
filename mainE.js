@@ -28,7 +28,7 @@ function downloadString(data, filename) {
     URL.revokeObjectURL(url);
     a.remove();
 }
-document.querySelector('#likeKey input[type="button"]').addEventListener("click", async (e) => {
+document.querySelector('#likeKey input[type="button"]').addEventListener("click", async (e) => {//버튼 클릭 했을 때 실행할 함수.
     e.preventDefault(); // form 기본 동작 막기
 
     //함수 처리과정에서 오류가 없도록 try와 catch사용
@@ -126,4 +126,5 @@ document.getElementById('fileuploadE').addEventListener('change', async (event) 
     const encrypted = await encryptFile(fileData, cryptoKey);
 
     downloadEncryptedFile(encrypted, file.name + ".enc"); //파일을 암호화하고 .enc확장자로 다운로드.
+
 });
