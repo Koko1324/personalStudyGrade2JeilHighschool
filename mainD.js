@@ -23,6 +23,7 @@ document.getElementById("key").addEventListener("submit", async (e) => {
         cryptoKey = await importKeyFromBase64(b64); //await로 async가 실행될때 까지 대기하여 b64를 실제 사용 가능한 key로 바꿈.
         console.log("CryptoKey 생성 성공:", cryptoKey);
         alert("키가 성공적으로 로드되었습니다.");
+        document.getElementById("keyInput").value = "";//수정(메모리에서 보안적인 보완을 위해 키 만들때 쓴 문자열 제거)
     } catch (err) {
         console.error(err);
         alert("키 형식이 올바르지 않습니다.");
