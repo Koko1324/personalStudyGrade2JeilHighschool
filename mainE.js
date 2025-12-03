@@ -10,7 +10,7 @@ function generateKeyBase64() {
 
 //랜덤 문자열 확인 << indexE
 let randomValue = generateKeyBase64();       // 1회만 생성
-console.log(randomValue);                    // 같은 값 출력
+//console.log(randomValue);                    // 같은 값 출력
 //document.getElementById("string").innerHTML = randomValue; //id가 string인 테그에 출력
 
 // 다운로드 함수
