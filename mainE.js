@@ -11,7 +11,8 @@ function generateKeyBase64() {
 //랜덤 문자열 확인 << indexE
 let randomValue = generateKeyBase64();       // 1회만 생성
 //console.log(randomValue);                    // 같은 값 출력
-//document.getElementById("string").innerHTML = randomValue; //id가 string인 테그에 출력
+//document.getElementById("string").innerHTML = randomValue; //id가 string인 태그에 출력
+//ㄴ테스트용코드
 
 // 다운로드 함수
 function downloadString(data, filename) {
@@ -28,12 +29,13 @@ function downloadString(data, filename) {
     URL.revokeObjectURL(url);
     a.remove();
 }
+
 document.querySelector('#likeKey input[type="button"]').addEventListener("click", async (e) => {//버튼 클릭 했을 때 실행할 함수.
     e.preventDefault(); // form 기본 동작 막기
 
     //함수 처리과정에서 오류가 없도록 try와 catch사용
     try {
-        downloadEncryptedFile(randomValue, "Key.txt"); //파일을 암호화하고 .txt확장자로 다운로드.
+        downloadString(randomValue, "Key.txt"); //파일을 암호화하고 .txt확장자로 다운로드.
         alert("문자열(키)가 성공적으로 다운로드되었습니다.");
     } catch (err) {
         console.error(err);
@@ -94,27 +96,18 @@ async function encryptFile(fileBuffer, key) {
     return combined; //최종 암호화된 데이터 반환.
 }
 
-// 다운로드 함수
-function downloadEncryptedFile(data, filename) {
-    const blob = new Blob([data]);//암호화된 데이터를 blob로 래핑(효율적인 파일 처리 위함).
-    const url = URL.createObjectURL(blob);//blob를 웹에서 다운로드 가능한 링크로 바꾸기.
-
-    //자동 파일 다운로드 수행.
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-
-    URL.revokeObjectURL(url);
-    a.remove();
+//해시 함수 정의
+async function generateSHA256(buffer) {
+    const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);//buffer(파일의 원본 binary 데이터)를 입력으로 넣으면 해시 결과가 담긴 ArrayBuffer를 반환
+    const hashArray = Array.from(new Uint8Array(hashBuffer));//hashBuffer를 1바이트 단위로 읽을 수 있는 TypedArray(Uint8Array) 형태로 변환, Array.form : 표준 배열로 변환(.map사용 가능하도록)
+    return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");//각 바이트를 2자리 16진수 문자열로 변환하는 과정, .join은 모든 16진수를 하나의 긴 문자열로 이어붙임
 }
 
 // 파일 선택 처리
 document.getElementById('fileuploadE').addEventListener('change', async (event) => { //시용자가 암호화될 파일을 선택 할 시 {}안의 코드를 실행함.
     
     //키 있는지 확인.
-    if (!cryptoKey) { 
+    if (!cryptoKey) {
         alert("먼저 키를 입력하세요.");
         return;
     }
@@ -126,7 +119,10 @@ document.getElementById('fileuploadE').addEventListener('change', async (event) 
     console.log("선택한 파일:", file.name);
 
     const fileData = await file.arrayBuffer();//전체 파일 메모리에 로드.(파일을 바이너리 배열로 읽음).
-    const encrypted = await encryptFile(fileData, cryptoKey);
+    const hash = await generateSHA256(fileData);//파일 데이터 해시
+    downloadString(hash, file.name + ".sha256");//해시값 다운로드(무결성 검사를 위해서)
 
-    downloadEncryptedFile(encrypted, file.name + ".enc"); //파일을 암호화하고 .enc확장자로 다운로드.
+    const encrypted = await encryptFile(fileData, cryptoKey);//파일 암호화.
+
+    downloadString(encrypted, file.name + ".enc"); //암호화된 파일을 .enc확장자로 다운로드.
 });

@@ -51,9 +51,16 @@ async function decryptFile(encryptedBuffer, key) {
 
     return new Uint8Array(decryptedBuffer);
 }
+//해시 함수 정의
+async function generateSHA256(buffer) {
+    const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);//buffer(파일의 원본 binary 데이터)를 입력으로 넣으면 해시 결과가 담긴 ArrayBuffer를 반환
+    const hashArray = Array.from(new Uint8Array(hashBuffer));//hashBuffer를 1바이트 단위로 읽을 수 있는 TypedArray(Uint8Array) 형태로 변환, Array.form : 표준 배열로 변환(.map사용 가능하도록)
+    return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");//각 바이트를 2자리 16진수 문자열로 변환하는 과정, .join은 모든 16진수를 하나의 긴 문자열로 이어붙임
+}
 
-function downloadDecryptedFile(data, filename) {
-    const blob = new Blob([data]);//복호화된 데이터를 blob로 래핑(효율적인 파일 처리 위함).
+// 다운로드 함수
+function downloadString(data, filename) {
+    const blob = new Blob([data]);//생성된 문자열을 blob로 래핑(효율적인 파일 처리 위함).
     const url = URL.createObjectURL(blob);//blob를 웹에서 다운로드 가능한 링크로 바꾸기.
 
     //자동 파일 다운로드 수행.
@@ -83,8 +90,11 @@ document.getElementById('fileuploadD').addEventListener('change', async (event) 
     const encryptedData = await file.arrayBuffer();//암호화된 파일 메모리로 읽어오기.
     const decrypted = await decryptFile(new Uint8Array(encryptedData), cryptoKey);//복호화 수행하기.
 
+    const hash = await generateSHA256(decrypted);//복호화된 파일 데이터 해시
+    downloadString(hash, file.name + ".sha256");//해시값 다운로드(무결성 검사를 위해서)
+
     // ".enc" 제거하기 (옵션)
     const originalName = file.name.replace(/\.enc$/, ""); //파일을 복호화하고 .enc확장자를 빼고 다운로드.
 
-    downloadDecryptedFile(decrypted, originalName);//복호화된 파일 다운로드.
+    downloadString(decrypted, originalName);//복호화된 파일 다운로드.
 });
