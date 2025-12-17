@@ -12,11 +12,6 @@ p{
   justify-content: center;
   align-items: center;
 }
-#emailValueInput{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
 #decrypt,
 #encrypt,
