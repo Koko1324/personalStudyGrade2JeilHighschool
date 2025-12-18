@@ -13,10 +13,11 @@ document.getElementById("hashed2").addEventListener("submit", async (e) => {
         alert("해시 값이 비어 있습니다")
         return;
     }
-    if(hashedValue1 == hashedValue2){
+    if(hashedValue1 === hashedValue2){
     alert("파일 변조 안 되었음");
     }
     else{
         alert("파일 변조 의심됨(해시값 다시 확인 필요)");
     }
 });
+
