@@ -7,7 +7,9 @@
 #normalButton,
 #fileinput,
 #howtouse,
-p{
+p,
+#hashed1,
+#hashed2{
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,6 +17,7 @@ p{
 
 #decrypt,
 #encrypt,
+#hash,
 #startProgram,
 #fileuploadE,
 #fileuploadD{
