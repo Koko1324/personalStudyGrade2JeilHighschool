@@ -44,7 +44,7 @@ document.querySelector('#likeKey input[type="button"]').addEventListener("click"
 });
 
 
-//랜덤 문자열 web crypto api의 키로 전환 << indexD에서 문자열 제출 했을 때 작동시키기. 
+//랜덤 문자열 web crypto api의 키로 전환 << indexE에서 문자열 제출 했을 때 작동시키기. 
 async function importKeyFromBase64(b64) { //async를 씀으로써 계속 적용됨(비동기 코드임).
     const raw = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
     return await crypto.subtle.importKey(
@@ -125,4 +125,5 @@ document.getElementById('fileuploadE').addEventListener('change', async (event) 
     const encrypted = await encryptFile(fileData, cryptoKey);//파일 암호화.
 
     downloadString(encrypted, file.name + ".enc"); //암호화된 파일을 .enc확장자로 다운로드.
+
 });
