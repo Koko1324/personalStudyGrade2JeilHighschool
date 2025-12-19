@@ -8,7 +8,7 @@ print(data)#test
 
 binaryOne = 0
 binaryZero = 0
-#바이너리 구조를 확인함. 이제 이걸 분석하기.
+#바이너리 구조룰 확인함. 이제 이걸 분석하기.
 
 for byte in data:
     #print(byte)#바이트로 추출함을 확인
@@ -19,5 +19,9 @@ for byte in data:
     binaryZero = binaryZero + Zero
 
 print("1의 갯수:", binaryOne)
-
 print("0의 갯수:", binaryZero)
+
+#비율로 계산하기
+bitCount = binaryOne + binaryZero
+print("1의 비율", binaryOne/bitCount)
+print("0의 비율", binaryZero/bitCount)
