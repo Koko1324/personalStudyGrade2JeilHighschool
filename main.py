@@ -8,7 +8,7 @@ print(data)#test
 
 binaryOne = 0
 binaryZero = 0
-#바이너리 구조가 b'\xd0\x82t\xfc\xe1M\x95\xa7\x15~\xc7\xb4\r-\xd5\xaa\xd5L\xceB\xdc\xf4e:02\xd6(~\xc7(4\xc9\x94\xde\xa5(\x16\xc3<\n_E\xd1EH\xaf\xd2\xba\xab'임을 확인함. 이제 이걸 분석하기.
+#바이너리 구조를 확인함. 이제 이걸 분석하기.
 
 for byte in data:
     #print(byte)#바이트로 추출함을 확인
@@ -19,4 +19,5 @@ for byte in data:
     binaryZero = binaryZero + Zero
 
 print("1의 갯수:", binaryOne)
+
 print("0의 갯수:", binaryZero)
