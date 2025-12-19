@@ -20,4 +20,3 @@ document.getElementById("hashed2").addEventListener("submit", async (e) => {
         alert("파일 변조 의심됨(해시값 다시 확인 필요)");
     }
 });
-

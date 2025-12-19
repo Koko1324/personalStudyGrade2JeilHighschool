@@ -125,5 +125,4 @@ document.getElementById('fileuploadE').addEventListener('change', async (event) 
     const encrypted = await encryptFile(fileData, cryptoKey);//파일 암호화.
 
     downloadString(encrypted, file.name + ".enc"); //암호화된 파일을 .enc확장자로 다운로드.
-
 });
